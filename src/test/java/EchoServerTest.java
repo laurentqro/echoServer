@@ -11,12 +11,11 @@ public class EchoServerTest {
     private ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
     @Test
-    public void echoes() throws IOException {
+    public void echoes() {
         FakeClientSocket fakeClientSocket = new FakeClientSocket(inputStream, outputStream);
-        FakeServerSocket fakeServerSocket = new FakeServerSocket(fakeClientSocket);
-        EchoServer echoServer = new EchoServer(fakeServerSocket);
+        EchoServerThread echoServerThread = new EchoServerThread(fakeClientSocket);
 
-        echoServer.start();
+        echoServerThread.run();
 
         assertEquals("hello, world!", outputStream.toString().trim());
     }

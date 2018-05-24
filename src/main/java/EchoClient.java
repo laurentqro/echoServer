@@ -6,16 +6,6 @@ public class EchoClient {
     private Socket echoSocket;
 
     public static void main(String[] args) {
-        try {
-            String hostName = "localhost";
-            int portNumber = 8000;
-            ConsoleIO consoleIO = new ConsoleIO(System.in, System.out);
-            Socket echoSocket = new Socket(hostName, portNumber);
-            EchoClient echoClient = new EchoClient(consoleIO, echoSocket);
-            echoClient.start();
-        } catch(IOException e) {
-            System.out.println(e.getMessage());
-        }
     }
 
     public EchoClient(ConsoleIO consoleIO, Socket echoSocket) {

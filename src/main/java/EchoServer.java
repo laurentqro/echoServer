@@ -4,40 +4,28 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.ServerSocket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class EchoServer {
     private ServerSocket serverSocket;
-
-    public static void main(String[] args) {
-        try {
-            int portNumber = 8000;
-            ServerSocket serverSocket = new ServerSocket(portNumber);
-            EchoServer echoServer = new EchoServer(serverSocket);
-            echoServer.start();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
+    private ExecutorService threadPool;
 
     EchoServer(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
+        this.threadPool = Executors.newFixedThreadPool(2);
     }
 
     public void start() {
-        try {
-            System.out.println("Started server");
-            Socket clientSocket = serverSocket.accept();
-            System.out.println("Accepted connection from client");
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                out.println(inputLine);
+        System.out.println("Started server");
+        System.out.println("Listening for clients ...");
+        while(true) {
+            try {
+                Socket socket = serverSocket.accept();
+                threadPool.execute(new EchoServerThread(socket));
+            } catch(IOException e) {
+                System.out.println(e.getMessage());
             }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
         }
     }
 }
