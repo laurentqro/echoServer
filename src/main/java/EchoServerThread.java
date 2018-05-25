@@ -6,20 +6,24 @@ import java.net.Socket;
 
 public class EchoServerThread extends Thread {
     private Socket socket;
+    private EchoServer server;
 
-    public EchoServerThread(Socket socket) {
+    public EchoServerThread(EchoServer server, Socket socket) {
         this.socket = socket;
+        this.server = server;
     }
 
     public void run() {
         try {
             System.out.println("Accepted client on thread: " + Thread.currentThread().getName());
+            server.addClient(socket);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                out.println(inputLine);
+            String message;
+            while ((message = in.readLine()) != null) {
+                out.println(message);
+                server.broadcastMessage(message);
             }
             socket.close();
         } catch(IOException e) {

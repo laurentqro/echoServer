@@ -2,13 +2,14 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 
 import static org.junit.Assert.*;
 
 public class EchoClientTest {
     @Test
-    public void sentMessageIsEchoedBack() {
+    public void sentMessageIsEchoedBack() throws IOException {
         ByteArrayInputStream inputStream = new ByteArrayInputStream("hello, world!".getBytes());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Socket fakeClientSocket = new FakeClientSocket(inputStream, outputStream);
