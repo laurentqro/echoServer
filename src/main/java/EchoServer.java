@@ -1,9 +1,6 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,6 +16,7 @@ public class EchoServer {
     public void start() {
         System.out.println("Started server");
         System.out.println("Listening for clients ...");
+
         while(true) {
             try {
                 Socket socket = serverSocket.accept();
