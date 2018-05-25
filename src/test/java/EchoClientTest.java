@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 
 public class EchoClientTest {
     @Test
-    public void fromStdInAndBack() {
+    public void sentMessageIsEchoedBack() {
         ByteArrayInputStream inputStream = new ByteArrayInputStream("hello, world!".getBytes());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Socket fakeClientSocket = new FakeClientSocket(inputStream, outputStream);
