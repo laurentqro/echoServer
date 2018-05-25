@@ -20,8 +20,7 @@ public class Main {
 
             try {
                 ServerSocket serverSocket = new ServerSocket(portNumber);
-                EchoServer echoServer = new EchoServer(serverSocket);
-                echoServer.start();
+                new EchoServer(serverSocket).start();
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
@@ -38,8 +37,7 @@ public class Main {
             try {
                 ConsoleIO consoleIO = new ConsoleIO(System.in, System.out);
                 Socket echoSocket = new Socket(hostName, portNumber);
-                EchoClient echoClient = new EchoClient(consoleIO, echoSocket);
-                echoClient.start();
+                new EchoClient(consoleIO, echoSocket).start();
             } catch(IOException e) {
                 System.out.println(e.getMessage());
             }
