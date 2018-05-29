@@ -13,9 +13,10 @@ public class EchoServerThread extends Thread {
     }
 
     public void run() {
+        System.out.println("Accepted client on thread: " + Thread.currentThread().getName());
+        server.addClient(socket);
+
         try {
-            System.out.println("Accepted client on thread: " + Thread.currentThread().getName());
-            server.addClient(socket);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             String message;
