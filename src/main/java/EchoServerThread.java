@@ -15,6 +15,7 @@ public class EchoServerThread extends Thread {
     public void run() {
         System.out.println("Accepted client on thread: " + Thread.currentThread().getName());
         server.addClient(socket);
+        System.out.println("Number of clients connected: " + server.getClients().size());
 
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));

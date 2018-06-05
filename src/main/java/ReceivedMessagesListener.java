@@ -22,4 +22,5 @@ public class ReceivedMessagesListener extends Thread {
             System.out.println(e.getMessage());
         }
     }
+
 }

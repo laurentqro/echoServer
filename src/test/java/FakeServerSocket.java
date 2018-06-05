@@ -1,15 +1,16 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.LinkedList;
 
 public class FakeServerSocket extends ServerSocket {
-    private Socket fakeClientSocket;
+    private LinkedList<Socket> fakeClientSockets;
 
-    FakeServerSocket(Socket fakeClientSocket) throws IOException {
-        this.fakeClientSocket = fakeClientSocket;
+    FakeServerSocket(LinkedList<Socket> fakeClientSockets) throws IOException {
+        this.fakeClientSockets = fakeClientSockets;
     }
 
     public Socket accept() {
-        return fakeClientSocket;
+        return fakeClientSockets.pop();
     }
 }

@@ -4,17 +4,16 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Executor;
 
 public class EchoServer {
     private ServerSocket serverSocket;
-    private ExecutorService threadPool;
+    private Executor executor;
     private List<Socket> clients;
 
-    EchoServer(ServerSocket serverSocket) {
+    EchoServer(ServerSocket serverSocket, Executor executor) {
         this.serverSocket = serverSocket;
-        this.threadPool = Executors.newFixedThreadPool(2);
+        this.executor = executor;
         this.clients = new ArrayList<>();
     }
 
@@ -24,12 +23,22 @@ public class EchoServer {
 
         while(true) {
             try {
-                Socket socket = serverSocket.accept();
-                threadPool.execute(new EchoServerThread(this, socket));
+                listenForClients();
             } catch(IOException e) {
                 System.out.println(e.getMessage());
             }
         }
+    }
+
+    public void listenForClients() throws IOException {
+        System.out.println("Accepting ...");
+        Socket socket = serverSocket.accept();
+        System.out.println("Accepted.");
+        executor.execute(new EchoServerThread(this, socket));
+    }
+
+    public List<Socket> getClients() {
+        return clients;
     }
 
     public void addClient(Socket socket) {
