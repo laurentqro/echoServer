@@ -1,9 +1,11 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         if (args.length == 0) {
             System.err.println("Usage: java EchoServer server <port number> or java EchoServer client <port number> <host name>");
             System.exit(1);
@@ -20,7 +22,8 @@ public class Main {
 
             try {
                 ServerSocket serverSocket = new ServerSocket(portNumber);
-                new EchoServer(serverSocket).start();
+                Executor executor = Executors.newFixedThreadPool(2);
+                new EchoServer(serverSocket, executor).start();
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
@@ -28,16 +31,18 @@ public class Main {
 
         if (mode.equals("client")) {
             if (args.length != 3) {
-                System.err.println("Usage: java EchoServer client <port number> <host name>");
+                System.err.println("Usage: java EchoServer client <port number> <host name> <name>");
                 System.exit(1);
             }
 
             String hostName = args[2];
+            String name = args[3];
 
             try {
+                Executor executor = Executors.newSingleThreadExecutor();
                 ConsoleIO consoleIO = new ConsoleIO(System.in, System.out);
                 Socket echoSocket = new Socket(hostName, portNumber);
-                new EchoClient(consoleIO, echoSocket).start();
+                new EchoClient(name, consoleIO, echoSocket, executor).start();
             } catch(IOException e) {
                 System.out.println(e.getMessage());
             }
