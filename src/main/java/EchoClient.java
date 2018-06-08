@@ -1,31 +1,39 @@
 import java.io.*;
 import java.net.Socket;
+import java.util.concurrent.Executor;
 
 public class EchoClient {
     private ConsoleIO consoleIO;
-    private Socket echoSocket;
+    private PrintWriter out;
+    private Socket socket;
+    private Executor executor;
+    private String name;
 
-    public static void main(String[] args) {
-    }
-
-    public EchoClient(ConsoleIO consoleIO, Socket echoSocket) {
+    public EchoClient(String name, ConsoleIO consoleIO, Socket socket, Executor executor) throws IOException {
         this.consoleIO = consoleIO;
-        this.echoSocket = echoSocket;
+        this.socket = socket;
+        this.out = new PrintWriter(socket.getOutputStream(), true);
+        this.executor = executor;
     }
 
     public void start() {
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-            PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);
+            executor.execute(new ReceivedMessagesListener(socket, consoleIO));
 
             String userInput;
-
             while ((userInput = consoleIO.readLine()) != null) {
                 out.println(userInput);
-                consoleIO.println("echo: " + in.readLine());
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public String getName() {
+        return name;
     }
 }
