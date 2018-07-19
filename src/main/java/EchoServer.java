@@ -9,7 +9,7 @@ import java.util.concurrent.Executor;
 public class EchoServer {
     private ServerSocket serverSocket;
     private Executor executor;
-    private List<Socket> clients;
+    private List<Client> clients;
 
     EchoServer(ServerSocket serverSocket, Executor executor) {
         this.serverSocket = serverSocket;
@@ -33,22 +33,23 @@ public class EchoServer {
     public void listenForClients() throws IOException {
         System.out.println("Accepting ...");
         Socket socket = serverSocket.accept();
+        Client client = new Client(socket);
         System.out.println("Accepted.");
-        executor.execute(new EchoServerThread(this, socket));
+        executor.execute(new EchoServerThread(this, client));
     }
 
-    public List<Socket> getClients() {
+    public List<Client> getClients() {
         return clients;
     }
 
-    public void addClient(Socket socket) {
-        clients.add(socket);
+    public void addClient(Client client) {
+        clients.add(client);
     }
 
     public void broadcastMessage(String message) {
-        for(Socket client : clients) {
+        for(Client client : clients) {
             try {
-                PrintWriter out = new PrintWriter(client.getOutputStream(), true);
+                PrintWriter out = new PrintWriter(client.socket.getOutputStream(), true);
                 out.println(message);
             } catch(IOException e) {
                System.out.println(e.getMessage());
