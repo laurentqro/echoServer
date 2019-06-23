@@ -21,8 +21,9 @@ public class EchoServerTest {
         FakeClientSocket fakeClientSocket = new FakeClientSocket(inputStream, outputStream);
         LinkedList<Socket> fakeClientSockets = new LinkedList<>(Arrays.asList(fakeClientSocket));
         FakeServerSocket fakeServerSocket = new FakeServerSocket(fakeClientSockets);
+        Client client = new Client(fakeClientSocket);
         EchoServer echoServer = new EchoServer(fakeServerSocket, executor);
-        EchoServerThread echoServerThread = new EchoServerThread(echoServer, fakeClientSocket);
+        EchoServerThread echoServerThread = new EchoServerThread(echoServer, client);
 
         echoServerThread.run();
 
